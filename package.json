@@ -1,0 +1,33 @@
+{
+  "name": "sharing-mockoon-slidev",
+  "version": "1.0.0",
+  "description": "Slidev presentation about Mockoon for sharing session",
+  "main": "slides.md",
+  "scripts": {
+    "build": "slidev build",
+    "dev": "slidev --open",
+    "publish": "cross-env HOST=0.0.0.0 PORT=3030 slidev --open",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.48.0",
+    "@slidev/theme-default": "latest",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "slidev",
+    "presentation",
+    "mockoon",
+    "api-mocking",
+    "frontend",
+    "backend",
+    "microservices"
+  ],
+  "author": "euclife",
+  "license": "MIT"
+}

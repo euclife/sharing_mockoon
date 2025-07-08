@@ -1,0 +1,809 @@
+{
+  "uuid": "f3552e4f-8972-42a0-a151-61b4b3ff42d8",
+  "lastMigration": 33,
+  "name": "Auth API Demo",
+  "endpointPrefix": "api/v1",
+  "latency": 100,
+  "port": 3002,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "43494dd3-7915-44c5-87d1-6a4abfa11e60",
+      "type": "http",
+      "documentation": "User registration",
+      "method": "post",
+      "endpoint": "auth/register",
+      "responses": [
+        {
+          "uuid": "74d6e4e4-6695-4f10-b896-2d04de9da252",
+          "body": "{\n  \"error\": \"Email Already Exists\",\n  \"message\": \"User with email {{request.body.email}} already exists\",\n  \"code\": \"EMAIL_EXISTS\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 200,
+          "statusCode": 409,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "email",
+              "value": "admin@test.com",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "4b1e50c9-9db2-4f2b-90d0-7b5729b773b7",
+          "body": "{\n  \"error\": \"Validation Error\",\n  \"message\": \"Invalid input data\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"details\": [\n    {{#unless request.body.email}}\n    {\n      \"field\": \"email\",\n      \"message\": \"Email is required\"\n    },\n    {{/unless}}\n    {{#unless request.body.password}}\n    {\n      \"field\": \"password\",\n      \"message\": \"Password is required\"\n    },\n    {{/unless}}\n    {{#unless request.body.name}}\n    {\n      \"field\": \"name\",\n      \"message\": \"Name is required\"\n    }\n    {{/unless}}\n  ],\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 100,
+          "statusCode": 422,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "email",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "d0f40cd6-595e-499e-8e9a-5fe3ea9ada96",
+          "body": "{\n  \"message\": \"Registration successful\",\n  \"user\": {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"name\": \"{{request.body.name}}\",\n    \"email\": \"{{request.body.email}}\",\n    \"role\": \"user\",\n    \"isEmailVerified\": false,\n    \"createdAt\": \"{{now}}\",\n    \"profile\": {\n      \"avatar\": \"{{faker 'image.avatar'}}\",\n      \"bio\": null,\n      \"location\": null\n    }\n  },\n  \"tokens\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.{{faker 'string.alphanumeric' 50}}\",\n    \"refreshToken\": \"{{faker 'string.alphanumeric' 64}}\",\n    \"expiresIn\": 3600,\n    \"tokenType\": \"Bearer\"\n  }\n}",
+          "latency": 300,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-Rate-Limit-Remaining",
+              "value": "{{faker 'number.int' 80 100}}"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "ab998eec-54d0-4b25-b0a8-389e99ebc6ba",
+      "type": "http",
+      "documentation": "User login",
+      "method": "post",
+      "endpoint": "auth/login",
+      "responses": [
+        {
+          "uuid": "8e109b70-ac9c-4cd0-84ef-f0597548c6ca",
+          "body": "{\n  \"error\": \"Invalid Credentials\",\n  \"message\": \"Email or password is incorrect\",\n  \"code\": \"INVALID_CREDENTIALS\",\n  \"timestamp\": \"{{now}}\",\n  \"attempts\": {{faker 'number.int' 1 5}}\n}",
+          "latency": 500,
+          "statusCode": 401,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "email",
+              "value": "wrong@test.com",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "bc8c865c-16ac-4e0d-b5e6-e6c8693378fe",
+          "body": "{\n  \"error\": \"Account Locked\",\n  \"message\": \"Account has been temporarily locked due to multiple failed login attempts\",\n  \"code\": \"ACCOUNT_LOCKED\",\n  \"lockedUntil\": \"{{faker 'date.future'}}\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 200,
+          "statusCode": 423,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "email",
+              "value": "locked@test.com",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "80c1a678-11fb-4e3b-8903-f6ef3c88abde",
+          "body": "{\n  \"message\": \"Login successful\",\n  \"user\": {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"name\": \"{{faker 'person.fullName'}}\",\n    \"email\": \"{{request.body.email}}\",\n    \"role\": \"{{faker 'helpers.arrayElement' (array 'user' 'admin' 'moderator')}}\",\n    \"isEmailVerified\": true,\n    \"lastLoginAt\": \"{{now}}\",\n    \"profile\": {\n      \"avatar\": \"{{faker 'image.avatar'}}\",\n      \"bio\": \"{{faker 'lorem.sentence'}}\",\n      \"location\": \"{{faker 'location.city'}}, {{faker 'location.country'}}\",\n      \"website\": \"{{faker 'internet.url'}}\",\n      \"phoneNumber\": \"{{faker 'phone.number'}}\"\n    },\n    \"preferences\": {\n      \"language\": \"{{faker 'helpers.arrayElement' (array 'en' 'id' 'es' 'fr')}}\",\n      \"timezone\": \"{{faker 'helpers.arrayElement' (array 'UTC' 'Asia/Jakarta' 'America/New_York')}}\",\n      \"notifications\": {\n        \"email\": {{faker 'datatype.boolean'}},\n        \"push\": {{faker 'datatype.boolean'}},\n        \"sms\": {{faker 'datatype.boolean'}}\n      }\n    }\n  },\n  \"tokens\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.{{faker 'string.alphanumeric' 50}}\",\n    \"refreshToken\": \"{{faker 'string.alphanumeric' 64}}\",\n    \"expiresIn\": 3600,\n    \"tokenType\": \"Bearer\"\n  },\n  \"permissions\": [\n    \"{{faker 'helpers.arrayElement' (array 'read:profile' 'write:profile' 'read:posts' 'write:posts')}}\",\n    \"{{faker 'helpers.arrayElement' (array 'read:users' 'write:users' 'admin:all')}}\"\n  ]\n}",
+          "latency": 400,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-Rate-Limit-Remaining",
+              "value": "{{faker 'number.int' 90 100}}"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "9efcc9ce-f96a-4422-b632-04e99ad87e0d",
+      "type": "http",
+      "documentation": "Refresh access token",
+      "method": "post",
+      "endpoint": "auth/refresh",
+      "responses": [
+        {
+          "uuid": "85190c41-3d60-4e8a-9a7c-252a5a815355",
+          "body": "{\n  \"error\": \"Invalid Refresh Token\",\n  \"message\": \"The refresh token is invalid or expired\",\n  \"code\": \"INVALID_REFRESH_TOKEN\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 100,
+          "statusCode": 401,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "refreshToken",
+              "value": "invalid-token",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "63ac885b-c8a7-430d-a522-828fdf386f9e",
+          "body": "{\n  \"message\": \"Token refreshed successfully\",\n  \"tokens\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.{{faker 'string.alphanumeric' 50}}\",\n    \"refreshToken\": \"{{faker 'string.alphanumeric' 64}}\",\n    \"expiresIn\": 3600,\n    \"tokenType\": \"Bearer\"\n  },\n  \"user\": {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"role\": \"{{faker 'helpers.arrayElement' (array 'user' 'admin')}}\"\n  }\n}",
+          "latency": 200,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "60f5d163-5ca3-453e-ba5e-a61232a51a9d",
+      "type": "http",
+      "documentation": "User logout",
+      "method": "post",
+      "endpoint": "auth/logout",
+      "responses": [
+        {
+          "uuid": "47ed2007-ab3d-4575-acb8-43d40040dbaf",
+          "body": "{\n  \"error\": \"Unauthorized\",\n  \"message\": \"Invalid or missing authorization token\",\n  \"code\": \"UNAUTHORIZED\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 100,
+          "statusCode": 401,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "ee201177-a807-4832-a72d-e9f7929cfbd5",
+          "body": "{\n  \"message\": \"Logout successful\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 150,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "7b2661c9-03cb-4671-8248-c2b45e7d95df",
+      "type": "http",
+      "documentation": "Get user profile",
+      "method": "get",
+      "endpoint": "auth/profile",
+      "responses": [
+        {
+          "uuid": "e523d4c7-4291-41d5-8d19-a186bb0a626b",
+          "body": "{\n  \"error\": \"Unauthorized\",\n  \"message\": \"Invalid or expired access token\",\n  \"code\": \"TOKEN_EXPIRED\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 50,
+          "statusCode": 401,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "WWW-Authenticate",
+              "value": "Bearer realm=\"API\""
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer invalid-token",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "efee9652-fccb-438f-994e-e1554e502a85",
+          "body": "{\n  \"user\": {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"name\": \"{{faker 'person.fullName'}}\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"role\": \"{{faker 'helpers.arrayElement' (array 'user' 'admin' 'moderator')}}\",\n    \"isEmailVerified\": {{faker 'datatype.boolean'}},\n    \"createdAt\": \"{{faker 'date.past'}}\",\n    \"lastLoginAt\": \"{{faker 'date.recent'}}\",\n    \"profile\": {\n      \"avatar\": \"{{faker 'image.avatar'}}\",\n      \"bio\": \"{{faker 'lorem.paragraph'}}\",\n      \"location\": \"{{faker 'location.city'}}, {{faker 'location.country'}}\",\n      \"website\": \"{{faker 'internet.url'}}\",\n      \"phoneNumber\": \"{{faker 'phone.number'}}\",\n      \"dateOfBirth\": \"{{faker 'date.birthdate'}}\",\n      \"gender\": \"{{faker 'helpers.arrayElement' (array 'male' 'female' 'other' 'prefer-not-to-say')}}\"\n    },\n    \"preferences\": {\n      \"language\": \"{{faker 'helpers.arrayElement' (array 'en' 'id' 'es' 'fr')}}\",\n      \"timezone\": \"{{faker 'helpers.arrayElement' (array 'UTC' 'Asia/Jakarta' 'America/New_York')}}\",\n      \"theme\": \"{{faker 'helpers.arrayElement' (array 'light' 'dark' 'auto')}}\",\n      \"notifications\": {\n        \"email\": {{faker 'datatype.boolean'}},\n        \"push\": {{faker 'datatype.boolean'}},\n        \"sms\": {{faker 'datatype.boolean'}},\n        \"marketing\": {{faker 'datatype.boolean'}}\n      }\n    },\n    \"statistics\": {\n      \"loginCount\": {{faker 'number.int' 1 1000}},\n      \"lastActiveAt\": \"{{faker 'date.recent'}}\",\n      \"accountStatus\": \"{{faker 'helpers.arrayElement' (array 'active' 'inactive' 'suspended')}}\"\n    }\n  },\n  \"permissions\": [\n    \"read:profile\",\n    \"write:profile\",\n    \"{{faker 'helpers.arrayElement' (array 'read:posts' 'write:posts' 'admin:users')}}\"\n  ]\n}",
+          "latency": 100,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "ac39ddc3-1a13-451f-a2a0-07e8e49eaad2",
+      "type": "http",
+      "documentation": "Forgot password request",
+      "method": "post",
+      "endpoint": "auth/forgot-password",
+      "responses": [
+        {
+          "uuid": "898a2347-d3c0-4b3e-b01b-fc27c37a0a65",
+          "body": "{\n  \"error\": \"Email Not Found\",\n  \"message\": \"No account found with email {{request.body.email}}\",\n  \"code\": \"EMAIL_NOT_FOUND\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 200,
+          "statusCode": 404,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "email",
+              "value": "notfound@test.com",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "873087a1-24ee-419c-af36-57869f1579ef",
+          "body": "{\n  \"message\": \"Password reset email sent\",\n  \"email\": \"{{request.body.email}}\",\n  \"resetTokenExpiry\": \"{{faker 'date.future'}}\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 500,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "c44c0cc5-bbac-4976-8bc0-81cf28fad862",
+      "type": "http",
+      "documentation": "Reset password with token",
+      "method": "post",
+      "endpoint": "auth/reset-password",
+      "responses": [
+        {
+          "uuid": "306c069d-a464-4796-b99e-51f4f02bcb62",
+          "body": "{\n  \"error\": \"Invalid Reset Token\",\n  \"message\": \"The password reset token is invalid or expired\",\n  \"code\": \"INVALID_RESET_TOKEN\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 100,
+          "statusCode": 400,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "token",
+              "value": "invalid-token",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "82702784-bea0-4590-a866-b8d8a9af1a8a",
+          "body": "{\n  \"message\": \"Password reset successful\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 300,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "5264aead-524f-4e46-bdff-7db09e2057d8",
+      "type": "http",
+      "documentation": "Verify email address",
+      "method": "post",
+      "endpoint": "auth/verify-email",
+      "responses": [
+        {
+          "uuid": "bc76196d-dbdc-474e-8cc0-f4ad76a66ae8",
+          "body": "{\n  \"error\": \"Invalid Verification Token\",\n  \"message\": \"The email verification token is invalid or expired\",\n  \"code\": \"INVALID_VERIFICATION_TOKEN\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 100,
+          "statusCode": 400,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "token",
+              "value": "invalid-token",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "dca11380-8723-4dd9-b0ea-ae03a5df3ba9",
+          "body": "{\n  \"message\": \"Email verified successfully\",\n  \"user\": {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"isEmailVerified\": true,\n    \"verifiedAt\": \"{{now}}\"\n  },\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 200,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "c76e3783-8cf6-4811-a442-ab8b68adef85",
+      "type": "http",
+      "documentation": "Change password (authenticated)",
+      "method": "post",
+      "endpoint": "auth/change-password",
+      "responses": [
+        {
+          "uuid": "39db8bb8-3833-4036-a475-d91f22c9f1fb",
+          "body": "{\n  \"error\": \"Unauthorized\",\n  \"message\": \"Authentication required\",\n  \"code\": \"UNAUTHORIZED\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 50,
+          "statusCode": 401,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "bf3a6e94-cd2f-4684-991f-8d99bae003b3",
+          "body": "{\n  \"error\": \"Invalid Current Password\",\n  \"message\": \"The current password is incorrect\",\n  \"code\": \"INVALID_CURRENT_PASSWORD\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 200,
+          "statusCode": 400,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "currentPassword",
+              "value": "wrongpassword",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "6ea321e5-56be-4e7e-9c9a-b4be3f988ac6",
+          "body": "{\n  \"message\": \"Password changed successfully\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 300,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "43494dd3-7915-44c5-87d1-6a4abfa11e60"
+    },
+    {
+      "type": "route",
+      "uuid": "ab998eec-54d0-4b25-b0a8-389e99ebc6ba"
+    },
+    {
+      "type": "route",
+      "uuid": "9efcc9ce-f96a-4422-b632-04e99ad87e0d"
+    },
+    {
+      "type": "route",
+      "uuid": "60f5d163-5ca3-453e-ba5e-a61232a51a9d"
+    },
+    {
+      "type": "route",
+      "uuid": "7b2661c9-03cb-4671-8248-c2b45e7d95df"
+    },
+    {
+      "type": "route",
+      "uuid": "ac39ddc3-1a13-451f-a2a0-07e8e49eaad2"
+    },
+    {
+      "type": "route",
+      "uuid": "c44c0cc5-bbac-4976-8bc0-81cf28fad862"
+    },
+    {
+      "type": "route",
+      "uuid": "5264aead-524f-4e46-bdff-7db09e2057d8"
+    },
+    {
+      "type": "route",
+      "uuid": "c76e3783-8cf6-4811-a442-ab8b68adef85"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,DELETE,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type,Authorization,X-Requested-With"
+    },
+    {
+      "key": "X-API-Version",
+      "value": "v1.0.0"
+    },
+    {
+      "key": "X-Powered-By",
+      "value": "Mockoon Auth API"
+    }
+  ],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "data": [],
+  "callbacks": []
+}

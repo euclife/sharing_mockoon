@@ -1,0 +1,409 @@
+{
+  "uuid": "201a0d3a-1453-4184-85a6-4bf7662a713f",
+  "lastMigration": 33,
+  "name": "Toko Online API Demo",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "fc3d4750-97ac-4e6a-b90c-881c10654957",
+      "type": "http",
+      "documentation": "Get all products",
+      "method": "get",
+      "endpoint": "products",
+      "responses": [
+        {
+          "uuid": "9e9512e4-2de2-4a20-9bfd-d72eb1e01d88",
+          "body": "{\n  \"data\": [\n    {\n      \"id\": \"{{faker 'string.uuid'}}\",\n      \"name\": \"{{faker 'commerce.productName'}}\",\n      \"price\": {{faker 'number.int' 10000 500000}},\n      \"category\": \"{{faker 'helpers.arrayElement' (array 'Electronics' 'Fashion' 'Books' 'Home')}}\",\n      \"description\": \"{{faker 'commerce.productDescription'}}\",\n      \"stock\": {{faker 'number.int' 0 100}},\n      \"rating\": {{faker 'number.float' 1 5 2}},\n      \"image\": \"{{faker 'image.url' 300 300}}\",\n      \"vendor\": {\n        \"name\": \"{{faker 'company.name'}}\",\n        \"city\": \"{{faker 'location.city'}}\"\n      },\n      \"createdAt\": \"{{faker 'date.recent'}}\"\n    },\n    {\n      \"id\": \"{{faker 'string.uuid'}}\",\n      \"name\": \"{{faker 'commerce.productName'}}\",\n      \"price\": {{faker 'number.int' 10000 500000}},\n      \"category\": \"{{faker 'helpers.arrayElement' (array 'Electronics' 'Fashion' 'Books' 'Home')}}\",\n      \"description\": \"{{faker 'commerce.productDescription'}}\",\n      \"stock\": {{faker 'number.int' 0 100}},\n      \"rating\": {{faker 'number.float' 1 5 2}},\n      \"image\": \"{{faker 'image.url' 300 300}}\",\n      \"vendor\": {\n        \"name\": \"{{faker 'company.name'}}\",\n        \"city\": \"{{faker 'location.city'}}\"\n      },\n      \"createdAt\": \"{{faker 'date.recent'}}\"\n    },\n    {\n      \"id\": \"{{faker 'string.uuid'}}\",\n      \"name\": \"{{faker 'commerce.productName'}}\",\n      \"price\": {{faker 'number.int' 10000 500000}},\n      \"category\": \"{{faker 'helpers.arrayElement' (array 'Electronics' 'Fashion' 'Books' 'Home')}}\",\n      \"description\": \"{{faker 'commerce.productDescription'}}\",\n      \"stock\": {{faker 'number.int' 0 100}},\n      \"rating\": {{faker 'number.float' 1 5 2}},\n      \"image\": \"{{faker 'image.url' 300 300}}\",\n      \"vendor\": {\n        \"name\": \"{{faker 'company.name'}}\",\n        \"city\": \"{{faker 'location.city'}}\"\n      },\n      \"createdAt\": \"{{faker 'date.recent'}}\"\n    }\n  ],\n  \"total\": 3,\n  \"page\": 1\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-API-Version",
+              "value": "v1.0.0"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "f7167da9-d668-49c6-919a-c1f6bcfe5f69",
+      "type": "http",
+      "documentation": "Get single product",
+      "method": "get",
+      "endpoint": "products/:id",
+      "responses": [
+        {
+          "uuid": "8fb49296-da62-4f4a-b479-60197e4bac77",
+          "body": "{\n  \"error\": \"Product Not Found\",\n  \"message\": \"Product with ID {{request.params.id}} not found\",\n  \"code\": 404\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "999",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "b77ccec9-5f19-489d-9080-a1fac62ab2c1",
+          "body": "{\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Something went wrong\",\n  \"code\": 500\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "query",
+              "modifier": "error",
+              "value": "server",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "8bcb7a13-e806-4c9b-9fc7-0fa83503c179",
+          "body": "{\n  \"id\": \"{{request.params.id}}\",\n  \"name\": \"{{faker 'commerce.productName'}}\",\n  \"price\": {{faker 'number.int' 10000 500000}},\n  \"category\": \"{{faker 'helpers.arrayElement' (array 'Electronics' 'Fashion' 'Books' 'Home')}}\",\n  \"description\": \"{{faker 'commerce.productDescription'}}\",\n  \"stock\": {{faker 'number.int' 0 100}},\n  \"rating\": {{faker 'number.float' 1 5 2}},\n  \"images\": [\n    \"{{faker 'image.url' 400 400}}\",\n    \"{{faker 'image.url' 400 400}}\"\n  ],\n  \"specs\": {\n    \"brand\": \"{{faker 'company.name'}}\",\n    \"model\": \"{{faker 'commerce.productAdjective'}}\",\n    \"warranty\": \"{{faker 'number.int' 6 36}} months\"\n  },\n  \"vendor\": {\n    \"name\": \"{{faker 'company.name'}}\",\n    \"city\": \"{{faker 'location.city'}}\",\n    \"rating\": {{faker 'number.float' 3 5 1}}\n  },\n  \"createdAt\": \"{{faker 'date.past'}}\",\n  \"updatedAt\": \"{{now}}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "9446d83d-51a3-48c2-bc90-36bd9c9a028c",
+      "type": "http",
+      "documentation": "Create new product",
+      "method": "post",
+      "endpoint": "products",
+      "responses": [
+        {
+          "uuid": "4029f4fa-9657-4698-a917-d22653954c8b",
+          "body": "{\n  \"id\": \"{{faker 'string.uuid'}}\",\n  \"name\": \"{{request.body.name}}\",\n  \"price\": {{request.body.price}},\n  \"category\": \"{{request.body.category}}\",\n  \"description\": \"{{request.body.description}}\",\n  \"stock\": 0,\n  \"rating\": 0,\n  \"createdAt\": \"{{now}}\",\n  \"status\": \"created\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "f2e67a2c-be06-46a0-a581-68f4cd8259fa",
+      "type": "http",
+      "documentation": "Search products",
+      "method": "get",
+      "endpoint": "search",
+      "responses": [
+        {
+          "uuid": "9ef7fe2f-ec7b-4a8f-babe-1fa6d38edb69",
+          "body": "{\n  \"query\": \"{{queryParam 'q'}}\",\n  \"category\": \"{{queryParam 'category'}}\",\n  \"results\": [\n    {\n      \"id\": \"{{faker 'string.uuid'}}\",\n      \"name\": \"{{queryParam 'q'}} {{faker 'commerce.productName'}}\",\n      \"price\": {{faker 'number.int' 10000 500000}},\n      \"category\": \"{{queryParam 'category'}}\",\n      \"rating\": {{faker 'number.float' 1 5 2}},\n      \"image\": \"{{faker 'image.url' 200 200}}\",\n      \"match\": {{faker 'number.float' 0.5 1 2}}\n    },\n    {\n      \"id\": \"{{faker 'string.uuid'}}\",\n      \"name\": \"{{queryParam 'q'}} {{faker 'commerce.productName'}}\",\n      \"price\": {{faker 'number.int' 10000 500000}},\n      \"category\": \"{{queryParam 'category'}}\",\n      \"rating\": {{faker 'number.float' 1 5 2}},\n      \"image\": \"{{faker 'image.url' 200 200}}\",\n      \"match\": {{faker 'number.float' 0.5 1 2}}\n    }\n  ],\n  \"total\": 2,\n  \"searchTime\": {{faker 'number.int' 10 200}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4d63554c-5db8-484f-902f-cc236fe7044a",
+      "type": "http",
+      "documentation": "Payment status with sequencing",
+      "method": "get",
+      "endpoint": "payment/status",
+      "responses": [
+        {
+          "uuid": "a062cb28-1c5d-418a-a332-0402823b156e",
+          "body": "{\n  \"status\": \"pending\",\n  \"message\": \"Payment processing\",\n  \"amount\": {{faker 'number.int' 10000 100000}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "ec5c796e-dba0-42a3-85b6-dd44f85670ff",
+          "body": "{\n  \"status\": \"failed\",\n  \"message\": \"Payment failed\",\n  \"errorCode\": \"INSUFFICIENT_FUNDS\"\n}",
+          "latency": 0,
+          "statusCode": 402,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        },
+        {
+          "uuid": "46f5ab8e-f254-478b-8092-4e2d4eacaab4",
+          "body": "{\n  \"status\": \"success\",\n  \"message\": \"Payment completed\",\n  \"transactionId\": \"{{faker 'string.uuid'}}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": "SEQUENTIAL",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "21d2a412-7e42-432b-a505-8707c6975ed1",
+      "type": "http",
+      "documentation": "Get categories",
+      "method": "get",
+      "endpoint": "categories",
+      "responses": [
+        {
+          "uuid": "493353d5-9ef6-4db8-b3a5-7aab08d40cdd",
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Electronics\",\n      \"count\": {{faker 'number.int' 10 100}}\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion\", \n      \"count\": {{faker 'number.int' 20 150}}\n    },\n    {\n      \"id\": 3,\n      \"name\": \"Books\",\n      \"count\": {{faker 'number.int' 5 80}}\n    },\n    {\n      \"id\": 4,\n      \"name\": \"Home\",\n      \"count\": {{faker 'number.int' 15 90}}\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "bodyType": "INLINE",
+          "databucketID": "",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "fc3d4750-97ac-4e6a-b90c-881c10654957"
+    },
+    {
+      "type": "route",
+      "uuid": "f7167da9-d668-49c6-919a-c1f6bcfe5f69"
+    },
+    {
+      "type": "route",
+      "uuid": "9446d83d-51a3-48c2-bc90-36bd9c9a028c"
+    },
+    {
+      "type": "route",
+      "uuid": "f2e67a2c-be06-46a0-a581-68f4cd8259fa"
+    },
+    {
+      "type": "route",
+      "uuid": "4d63554c-5db8-484f-902f-cc236fe7044a"
+    },
+    {
+      "type": "route",
+      "uuid": "21d2a412-7e42-432b-a505-8707c6975ed1"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,DELETE,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type,Authorization"
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "X-Response-Time",
+      "value": "{{faker 'number.int' 10 150}}ms"
+    }
+  ],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "data": [],
+  "callbacks": []
+}
