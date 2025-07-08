@@ -19,8 +19,10 @@ fonts:
 ## Demo Session - From Zero to Hero in 15 minutes
 
 <div class="pt-12">
+  <span> s.id/mockcoon</span>
+  <img src="images/qr-mockoon.png" class="w-32 mx-auto mb-4" alt="Mockoon Logo">
   <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space untuk lanjut <carbon:arrow-right class="inline"/>
+    Spasi Gan <carbon:arrow-right class="inline"/>
   </span>
 </div>
 
