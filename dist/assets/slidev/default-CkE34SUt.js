@@ -1,0 +1,1 @@
+import{f as o,o as s,j as t}from"../modules/vue-BePYDZP4.js";import{b as c}from"../index-LUFoysMJ.js";const n={},a={class:"slidev-layout default"};function l(e,r){return s(),o("div",a,[t(e.$slots,"default")])}const _=c(n,[["render",l],["__file","/home/kes-dev3/Projects/Applications/sharing/mockoon/node_modules/@slidev/client/layouts/default.vue"]]);export{_ as I};
